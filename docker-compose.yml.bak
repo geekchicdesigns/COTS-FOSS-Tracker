@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: devpass
+      POSTGRES_DB: platform
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    hostname: gitlab.local
+    ports:
+      - "8080:80"
+      - "2222:22"
+    volumes:
+      - gitlab_config:/etc/gitlab
+      - gitlab_data:/var/opt/gitlab
+    shm_size: "256m"
+
+  argocd:
+    image: quay.io/argoproj/argocd:v2.10.2
+    command: argocd-server
+    ports:
+      - "8081:8080"
+
+  confluence:
+    image: atlassian/confluence-server:8.5
+    ports:
+      - "8090:8090"
+    environment:
+      ATL_JDBC_URL: jdbc:postgresql://postgres:5432/platform
+      ATL_JDBC_USER: dev
+      ATL_JDBC_PASSWORD: devpass
+    depends_on:
+      - postgres
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  postgres_data:
+  gitlab_config:
+  gitlab_data:
+  grafana_data:
+

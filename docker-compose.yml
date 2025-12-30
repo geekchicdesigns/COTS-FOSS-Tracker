@@ -10,12 +10,19 @@ services:
 
   gitlab:
     image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    hostname: gitlab.local
     ports:
       - "8080:80"
       - "2222:22"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.local'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
     volumes:
-      - gitlab_config:/etc/gitlab
-      - gitlab_data:/var/opt/gitlab
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
 
   grafana:
     image: grafana/grafana:latest
