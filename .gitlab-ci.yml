@@ -1,0 +1,24 @@
+stages:
+  - scan
+  - review
+  - publish
+
+scan_versions:
+  stage: scan
+  script:
+    - ./tracker/fetch_versions.sh
+    - python3 tracker/compare_versions.py
+  artifacts:
+    paths:
+      - tracker/output/
+
+approval_gate:
+  stage: review
+  when: manual
+  allow_failure: false
+
+publish_results:
+  stage: publish
+  script:
+    - ./tracker/publish_to_confluence.sh
+
