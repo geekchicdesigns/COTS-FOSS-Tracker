@@ -2,7 +2,6 @@ stages:
   - scan
   - review
   - publish
-  - security
 
 # --------------------
 # Scan versions
@@ -24,6 +23,8 @@ approval_gate:
   stage: review
   when: manual
   allow_failure: false
+  script:
+    - echo "Approval granted - proceeding to publish stage"
 
 publish_to_confluence:
   stage: publish
@@ -80,13 +81,3 @@ publish_existing_page:
     - apk add --no-cache bash curl jq
     - ./tracker/update_confluence_page.sh
 
-# --------------------
-# Security (optional)
-# --------------------
-variables:
-  SECRET_DETECTION_ENABLED: "true"
-
-secret_detection:
-  stage: secret-detection
-
-  stage: security
