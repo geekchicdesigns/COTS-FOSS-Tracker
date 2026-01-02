@@ -1,0 +1,12 @@
+stages:
+  - test
+
+confluence_api_test:
+  image: alpine:latest
+  stage: test
+  script:
+    - apk add --no-cache curl jq
+    - curl -s -u "$CONF_USER_EMAIL:$CONF_API_TOKEN" \
+        "$CONF_BASE_URL/wiki/rest/api/content/$CONF_PARENT_PAGE_ID" \
+        | jq '.title, .id'
+
