@@ -12,6 +12,7 @@ publish_child_report:
   tags: [docker]
   script:
     - apk add --no-cache git bash curl jq
-    - git clone http://gitlab/platform/cots-foss-tracker.git
+    - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab/platform/cots-foss-tracker.git
     - cd cots-foss-tracker
-    - ./tracker/create_child_report.sh
+    - chmod +x ./tracker/create_child_report.sh
+    - bash ./tracker/create_child_report.sh
