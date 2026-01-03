@@ -9,3 +9,5 @@ publish_child_report:
     - apk add --no-cache bash curl jq
     - ./tracker/create_child_report.sh
 
+  variables:
+    CI_REPOSITORY_URL: "ssh://git@gitlab.local:2222/platform/cots-foss-tracker.git"
