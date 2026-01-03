@@ -42,6 +42,15 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
 
+  argocd:
+    image: quay.io/argoproj/argocd:v2.10.2
+    container_name: argocd
+    command: argocd-server
+    ports:
+      - "8081:8080"
+    environment:
+      - ARGOCD_SERVER_INSECURE=true
+
 volumes:
   postgres_data:
   gitlab_config:
