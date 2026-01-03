@@ -22,6 +22,18 @@ services:
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_data:/var/opt/gitlab
+    networks:
+      - gitlab-net
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    volumes:
+      - gitlab_runner_config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gitlab-net
 
   grafana:
     image: grafana/grafana:latest
@@ -29,16 +41,6 @@ services:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
-
-  gitlab-runner:
-    image: gitlab/gitlab-runner:latest
-    container_name: gitlab-runner
-    restart: always
-    volumes:
-      - gitlab_runer_config:/etc/gitlab-runner
-      - /var/run/docker.sock:/var/run/docker.sock
-    network:
-      - gitlab-net
 
 volumes:
   postgres_data:
@@ -49,4 +51,3 @@ volumes:
 
 networks:
   gitlab-net:
-    external: true
