@@ -11,7 +11,7 @@ publish_child_report:
     GIT_STRATEGY: none
   tags: [docker]
   script:
-    - apk add --no-cache bash curl jq
+    - apk add --no-cache git bash curl jq
     - git clone http://gitlab/platform/cots-foss-tracker.git
     - cd cots-foss-tracker
     - ./tracker/create_child_report.sh
