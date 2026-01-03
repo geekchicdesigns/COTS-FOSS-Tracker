@@ -14,5 +14,4 @@ publish_child_report:
     - apk add --no-cache git bash curl jq
     - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab/platform/cots-foss-tracker.git
     - cd cots-foss-tracker
-    - chmod +x ./tracker/create_child_report.sh
     - bash ./tracker/create_child_report.sh
