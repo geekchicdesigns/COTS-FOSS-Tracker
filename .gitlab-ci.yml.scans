@@ -1,0 +1,62 @@
+stages:
+  - scan
+  - review
+  - publish
+
+# --------------------
+# Scan versions
+# --------------------
+scan_versions:
+  stage: scan
+  image: python:3.12
+  tags:
+    - docker
+  script:
+    - ./tracker/fetch_versions.sh
+    - python3 tracker/compare_versions.py
+  artifacts:
+    paths:
+      - tracker/output/
+
+# --------------------
+# Manual approval gate
+# --------------------
+approval_gate:
+  stage: review
+  when: manual
+  allow_failure: false
+  script:
+    - echo "Approval granted - proceeding to publish stage"
+
+
+# --------------------
+# Publish NEW child report (primary path)
+# --------------------
+publish_child_report:
+  stage: publish
+  image: alpine:latest
+  tags:
+    - docker
+  needs:
+    - scan_versions
+    - approval_gate
+  script:
+    - apk add --no-cache bash curl jq
+    - ./tracker/create_child_report.sh
+
+# --------------------
+# Update existing page (optional / manual)
+# --------------------
+publish_existing_page:
+  stage: publish
+  image: alpine:latest
+  tags:
+    - docker
+  needs:
+    - scan_versions
+    - approval_gate
+  when: manual
+  script:
+    - apk add --no-cache bash curl jq
+    - ./tracker/update_confluence_page.sh
+
