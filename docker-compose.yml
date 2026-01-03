@@ -35,8 +35,10 @@ services:
     container_name: gitlab-runner
     restart: always
     volumes:
+      - gitlab_runer_config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
-      - gitlab_runner_config:/etc/gitlab-runner
+    network:
+      - gitlab-net
 
 volumes:
   postgres_data:
@@ -44,3 +46,7 @@ volumes:
   gitlab_data:
   grafana_data:
   gitlab_runner_config:
+
+networks:
+  gitlab-net:
+    external: true
