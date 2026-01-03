@@ -9,7 +9,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   gitlab:
-    image: gitlab/gitlab-ce:16.11.2-ce.0
+    image: gitlab/gitlab-ce:latest
     container_name: gitlab
     hostname: gitlab.local
     ports:
@@ -51,3 +51,4 @@ volumes:
 
 networks:
   gitlab-net:
+    name: gitlab-net
