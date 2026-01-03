@@ -28,6 +28,7 @@ approval_gate:
   script:
     - echo "Approval granted - proceeding to publish stage"
 
+
 # --------------------
 # Publish NEW child report (primary path)
 # --------------------
