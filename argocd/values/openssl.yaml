@@ -1,0 +1,6 @@
+software: OpenSSL
+category: FOSS
+approved_version: 3.2.1
+license: Apache-2.0
+grafana_dashboard: https://grafana.local/d/openssl
+

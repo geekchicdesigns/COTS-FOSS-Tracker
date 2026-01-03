@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openssl
+spec:
+  source:
+    repoURL: https://gitlab.local/platform/cots-foss-tracker.git
+    targetRevision: main
+    path: argocd/values/openssl
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cots-foss
+  syncPolicy:
+    automated:
+      selfHeal: true
+

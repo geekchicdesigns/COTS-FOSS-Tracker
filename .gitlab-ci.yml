@@ -1,8 +1,21 @@
 stages:
+  - scan
   - publish
 
 #variables:
   #   CI_REPOSITORY_URL: "ssh://git@gitlab.local:2222/platform/cots-foss-tracker.git"
+
+scan_versions:
+  stage: scan
+  image: alpine:latest
+  script:
+    - apk add --no-cache curl bash jq kubectl
+    - curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+    - chmod +x /usr/local/bin/argocd
+    - kubectl port-forward svc/argocd-server -n argocd 8081:443 &
+    - sleep 3
+    - argocd login localhost:8081 --auth-token $ARGOCD_AUTH_TOKEN --insecure
+    - argocd app list
 
 publish_child_report:
   stage: publish
