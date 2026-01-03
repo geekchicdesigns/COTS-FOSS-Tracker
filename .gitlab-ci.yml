@@ -9,6 +9,8 @@ stages:
 scan_versions:
   stage: scan
   image: python:3.12
+  tags:
+    - docker
   script:
     - ./tracker/fetch_versions.sh
     - python3 tracker/compare_versions.py
@@ -26,40 +28,14 @@ approval_gate:
   script:
     - echo "Approval granted - proceeding to publish stage"
 
-publish_to_confluence:
-  stage: publish
-  image: alpine:latest
-  script:
-    - apk add --no-cache curl jq
-    - ./tracker/publish_to_confluence.sh
-  needs:
-    - scan_versions
-
-publish_existing_page:
-  stage: publish
-  image: alpine:latest
-  script:
-    - apk add --no-cache curl jq
-    - ./tracker/update_confluence_page.sh
-  need:
-    - scan_versions
-
-  publish_child_report:
-    stage: publish
-    image: alpine:latest
-    script:
-      - apk add --no-cache curl jq
-      - ./tracker/create_child_report.sh
-    needs:
-      - scan_versions
-    when: manual
-
 # --------------------
 # Publish NEW child report (primary path)
 # --------------------
 publish_child_report:
   stage: publish
   image: alpine:latest
+  tags:
+    - docker
   needs:
     - scan_versions
     - approval_gate
@@ -73,6 +49,8 @@ publish_child_report:
 publish_existing_page:
   stage: publish
   image: alpine:latest
+  tags:
+    - docker
   needs:
     - scan_versions
     - approval_gate
