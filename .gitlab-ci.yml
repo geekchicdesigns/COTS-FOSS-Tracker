@@ -13,7 +13,7 @@ scan_versions:
     - apk add --no-cache curl bash jq
     - curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
     - chmod +x /usr/local/bin/argocd
-    - argocd login host.docker.internal:8081 --auth-token "$ARGOCD_AUTH_TOKEN" --insecure --grpc-web
+    - argocd login host.docker.internal:8081 --auth-token "$ARGOCD_TOKEN" --insecure --grpc-web
     - argocd app list
 
 publish_child_report:
