@@ -2,19 +2,32 @@ stages:
   - scan
   - publish
 
-#variables:
-  #   CI_REPOSITORY_URL: "ssh://git@gitlab.local:2222/platform/cots-foss-tracker.git"
+# These should already exist in GitLab → CI/CD → Variables
+# ARGOCD_SERVER=https://host.docker.internal:8081
+# ARGOCD_TOKEN=<JWT>
 
 scan_versions:
   stage: scan
   image: alpine:latest
   tags: [docker]
   script:
-    - apk add --no-cache curl bash jq
-    - curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-    - chmod +x /usr/local/bin/argocd
-    - argocd login "$ARGOCD_SERVER" --auth-token "$ARGOCD_TOKEN" --insecure --grpc-web
-    - argocd app list
+    - apk add --no-cache curl jq bash
+
+    # Fetch all ArgoCD applications (source of truth)
+    - |
+      curl -sk \
+        -H "Authorization: Bearer $ARGOCD_TOKEN" \
+        "$ARGOCD_SERVER/api/v1/applications" \
+        > argocd-applications.json
+
+    # Optional sanity check (non-fatal)
+    - jq '.' argocd-applications.json
+
+  artifacts:
+    when: always
+    paths:
+      - argocd-applications.json
+    expire_in: 1 hour
 
 publish_child_report:
   stage: publish
@@ -22,8 +35,14 @@ publish_child_report:
   variables:
     GIT_STRATEGY: none
   tags: [docker]
+  dependencies:
+    - scan_versions
   script:
     - apk add --no-cache git bash curl jq
+
     - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab/platform/cots-foss-tracker.git
     - cd cots-foss-tracker
-    - bash ./tracker/create_child_report.sh
+
+    # argocd-applications.json is already present via artifacts
+    - bash ./tracker/create_child_report.sh argocd-applications.json
+
