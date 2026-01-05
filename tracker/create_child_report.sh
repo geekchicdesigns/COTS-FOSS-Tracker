@@ -1,34 +1,56 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "${CONF_USER_EMAIL:?Missing CONF_USER_EMAIL}"
-: "${CONF_API_TOKEN:?Missing CONF_API_TOKEN}"
-: "${CONF_BASE_URL:?Missing CONF_BASE_URL}"
-: "${CONF_SPACE_KEY:?Missing CONF_SPACE_KEY}"
-: "${CONF_PARENT_PAGE_ID:?Missing CONF_PARENT_PAGE_ID}"
+# ----------------------------
+# Inputs / Outputs
+# ----------------------------
+ARGOCD_JSON="${1:-argocd-applications.json}"
+OUTPUT_DIR="tracker/output"
+OUTPUT_JSON="${OUTPUT_DIR}/app_versions.json"
+OUTPUT_MD="${OUTPUT_DIR}/app_versions.md"
 
-CONTENT=$(jq -Rs . < tracker/output/versions.md)
+mkdir -p "$OUTPUT_DIR"
 
-PAYLOAD=$(jq -n \
-  --arg title "Version Report - $(date +%F)" \
-  --arg parent "$CONF_PARENT_PAGE_ID" \
-  --arg space "$CONF_SPACE_KEY" \
-  --argjson content "$CONTENT" \
-  '{
-    type: "page",
-    title: $title,
-    ancestors: [{ id: $parent }],
-    space: { key: $space },
-    body: {
-      storage: {
-        value: $content,
-        representation: "storage"
-      }
-    }
-  }')
+if [[ ! -f "$ARGOCD_JSON" ]]; then
+  echo "ERROR: ArgoCD JSON input not found: $ARGOCD_JSON" >&2
+  exit 1
+fi
 
-curl --http1.1 -sS -X POST \
-  -u "$CONF_USER_EMAIL:$CONF_API_TOKEN" \
-  -H "Content-Type: application/json" \
-  "$CONF_BASE_URL/wiki/rest/api/content" \
-  -d "$PAYLOAD"
+# ----------------------------
+# Normalize ArgoCD data
+# ----------------------------
+jq '
+.items[] |
+{
+  application: .metadata.name,
+  namespace: .spec.destination.namespace,
+  repo_url: .spec.source.repoURL,
+  helm_chart: .spec.source.chart,
+  helm_chart_version: .spec.source.targetRevision,
+  deployed_revision: .status.sync.revision,
+  sync_status: .status.sync.status,
+  health_status: .status.health.status,
+  last_deployed_at: (.status.history[0].deployedAt // "unknown")
+}
+' "$ARGOCD_JSON" > "$OUTPUT_JSON"
+
+# ----------------------------
+# Generate human-readable Markdown
+# ----------------------------
+{
+  echo "# ArgoCD Application Versions"
+  echo
+  echo "| Application | Namespace | Chart | Version | Sync | Health | Deployed At |"
+  echo "|------------|-----------|-------|---------|------|--------|-------------|"
+
+  jq -r '
+  . |
+  "| \(.application) | \(.namespace) | \(.helm_chart) | \(.helm_chart_version) | \(.sync_status) | \(.health_status) | \(.last_deployed_at) |"
+  ' "$OUTPUT_JSON"
+
+} > "$OUTPUT_MD"
+
+echo "✔ ArgoCD application report generated:"
+echo "  - $OUTPUT_JSON"
+echo "  - $OUTPUT_MD"
+
