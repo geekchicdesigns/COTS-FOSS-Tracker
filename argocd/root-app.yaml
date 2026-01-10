@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: http://gitlab.local:8080/platform/cots-foss-tracker.git
     targetRevision: main
-    path: argocd-apps/apps
+    path: argocd/apps
 
   destination:
     server: https://kubernetes.default.svc
