@@ -1,5 +1,18 @@
 ## ARGOCD APP-OF-APPS
 
+## GitOp Flow
+| Action        | Who does it |
+| ------------- | ----------- |
+| Define apps   | Git         |
+| Read apps     | ArgoCD      |
+| Deploy apps   | ArgoCD      |
+| Observe state | GitLab CI   |
+| Report        | Confluence  |
+
+  - No scripts deploy.
+  - No CI mutates the cluster.
+  - Everything is auditable.
+
 ### Tree Structured Layout
     ../argocd/
     ├── README.md
