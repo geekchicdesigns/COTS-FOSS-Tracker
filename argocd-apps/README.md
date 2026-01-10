@@ -52,6 +52,6 @@ Apply the root app once:
   https://host.docker.internal:8081/api/v1/applications | jq '.items[].metadata.name'
 
   - Within ArgoCD UI:
-	- Root app: Synced
-        - Child apps: Synced / Healthy
+    - Root app: Synced
+    - Child apps: Synced / Healthy
 
