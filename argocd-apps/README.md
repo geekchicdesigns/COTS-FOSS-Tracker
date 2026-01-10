@@ -34,22 +34,22 @@
 
 ### Child Applications populate ArgoCD
   - Example:
-'argocd-apps/apps/grafana.yaml'
+  `argocd-apps/apps/grafana.yaml`
 
   - Entries created in:
-'/api/v1/applications'
+  `/api/v1/applications`
 
 ### Bootstrap ArgoCD (one-time only)
 Apply the root app once:
-'kubectl apply -f argocd-apps/root-app.yaml'
+  `kubectl apply -f argocd-apps/root-app.yaml`
 
 ### Verify in ArgoCD
   - Within CLI:
-'argocd app list'
+  `argocd app list`
 
   - Within API (what CI uses):
-'curl -sk -H "Authorization: Bearer $ARGOCD_TOKEN" \
-  https://host.docker.internal:8081/api/v1/applications | jq '.items[].metadata.name'
+  `curl -sk -H "Authorization: Bearer $ARGOCD_TOKEN" \
+  https://host.docker.internal:8081/api/v1/applications | jq '.items[].metadata.name`
 
   - Within ArgoCD UI:
     - Root app: Synced
