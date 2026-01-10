@@ -12,9 +12,6 @@ spec:
     targetRevision: 7.0.19
     helm:
       releaseName: grafana
-      values: |
-        service:
-          type: ClusterIP
 
   destination:
     server: https://kubernetes.default.svc
