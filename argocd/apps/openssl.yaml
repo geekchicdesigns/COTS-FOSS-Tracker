@@ -4,7 +4,7 @@ metadata:
   name: openssl
 spec:
   source:
-    repoURL: https://gitlab.local/platform/cots-foss-tracker.git
+    repoURL: http://gitlab.local:8080/platform/cots-foss-tracker.git
     targetRevision: main
     path: argocd/values/openssl
   destination:
