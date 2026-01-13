@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gitops-root
+  name: cots-foss-root
   namespace: argocd
 spec:
-  project: gitops
+  project: cots-foss-tracker
   source:
     repoURL: http://host.docker.internal:8080/platform/cots-foss-tracker.git
     targetRevision: main
