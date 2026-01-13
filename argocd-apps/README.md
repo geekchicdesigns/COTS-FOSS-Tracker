@@ -15,23 +15,24 @@
   - Everything is auditable.
 
 ### Tree Structured Layout
-    ../argocd-apps/
-    ├── README.md
-    ├── apps
-    │   ├── argocd.yaml
-    │   ├── gitlab.yaml
-    │   ├── grafana.yaml
-    │   ├── openssl.yaml
-    │   ├── postgres.yaml
-    │   ├── prometheus.yaml
-    │   ├── redis.yaml
-    │   └── terraform.yaml
-    ├── root-app.yaml		# bootstrap (applied once)
-    └── values
-        ├── argocd.yaml
-        ├── openssl.yaml
-        ├── redis.yaml
-        └── terraform.yaml
+argocd-apps/
+├── README.md
+├── root-app.yaml                 # App-of-apps (bootstrap)
+├── projects/
+│   └── gitops.yaml               # AppProject (RBAC + scope)
+├── apps/
+│   ├── grafana/
+│   │   ├── application.yaml      # ArgoCD Application
+│   │   └── values.yaml           # Version pinning
+│   ├── gitlab/
+│   │   ├── application.yaml
+│   │   └── values.yaml
+│   ├── postgres/
+│   │   ├── application.yaml
+│   │   └── values.yaml
+│   └── redis/
+│       ├── application.yaml
+│       └── values.yaml
 
 ### Child Applications populate ArgoCD
   - Example:
