@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: gitops
+  namespace: argocd
+spec:
+  sourceRepos:
+    - https://gitlab.example.com/platform/*
+    - https://*.github.io/helm-charts
+  destinations:
+    - namespace: gitops
+      server: https://kubernetes.default.svc
+

@@ -1,20 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cots-foss-root
+  name: gitops-root
   namespace: argocd
 spec:
-  project: default
-
+  project: gitops
   source:
     repoURL: http://host.docker.internal:8080/platform/cots-foss-tracker.git
     targetRevision: main
-    path: argocd-apps/apps
-
+    path: apps
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
-
   syncPolicy:
     automated:
       prune: true

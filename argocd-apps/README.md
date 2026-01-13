@@ -1,14 +1,13 @@
 ## ARGOCD APP-OF-APPS
 
 ## GitOp Flow
-| Action        | Who does it |
-| ------------- | ----------- |
-| Define apps   | Git         |
-| Read apps     | ArgoCD      |
-| Deploy apps   | ArgoCD      |
-| Observe state | GitLab CI   |
-| Report        | Confluence  |
-| Visualize	| Grafana     |
+| Action                 | Owner       |
+| ---------------------- | ----------- |
+| Define apps + versions | Git         |
+| Reconcile state        | ArgoCD      |
+| Observe + scrape       | GitLab CI   |
+| Audit narrative        | Confluence  |
+| Visualize	         | Grafana     |
 
   - No scripts deploy.
   - No CI mutates the cluster.
@@ -45,7 +44,8 @@
 
 ### Child Applications populate ArgoCD
   - Example:
-  `argocd-apps/apps/grafana.yaml`
+  `argocd-apps/apps/<application_name>/application.yaml`
+  `argocd-apps/apps/<application_name>/values.yaml`
 
   - Entries created in:
   `/api/v1/applications`

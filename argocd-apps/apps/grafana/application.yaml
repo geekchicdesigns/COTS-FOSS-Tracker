@@ -4,19 +4,17 @@ metadata:
   name: grafana
   namespace: argocd
 spec:
-  project: default
-
+  project: gitops
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: grafana
-    targetRevision: 7.0.19
+    targetRevision: 7.3.11
     helm:
-      releaseName: grafana
-
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
-
+    namespace: gitops
   syncPolicy:
     automated:
       prune: true
