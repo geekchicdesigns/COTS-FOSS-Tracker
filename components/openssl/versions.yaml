@@ -1,0 +1,5 @@
+component: openssl
+approved:
+  version: "3.0.13"
+  source: https://www.openssl.org/source/
+

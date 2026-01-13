@@ -4,9 +4,10 @@ metadata:
   name: gitops
   namespace: argocd
 spec:
+  description: GitOps-managed applications
   sourceRepos:
-    - https://gitlab.example.com/platform/*
-    - https://*.github.io/helm-charts
+    - http://host.docker.internal:8080/platform/cots-foss-tracker.git
+    - https://grafana.github.io/helm-charts
   destinations:
     - namespace: gitops
       server: https://kubernetes.default.svc
