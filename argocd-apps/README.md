@@ -15,7 +15,7 @@
   - Everything is auditable.
 
 ### Tree Structured Layout
-    ../argocd/
+    ../argocd-apps/
     ├── README.md
     ├── apps
     │   ├── argocd.yaml
