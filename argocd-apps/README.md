@@ -8,6 +8,7 @@
 | Deploy apps   | ArgoCD      |
 | Observe state | GitLab CI   |
 | Report        | Confluence  |
+| Visualize	| Grafana     |
 
   - No scripts deploy.
   - No CI mutates the cluster.
