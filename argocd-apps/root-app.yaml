@@ -4,7 +4,7 @@ metadata:
   name: cots-foss-root
   namespace: argocd
 spec:
-  project: gitops
+  project: platform
   source:
     repoURL: http://host.docker.internal:8080/platform/cots-foss-tracker.git
     targetRevision: main
@@ -13,7 +13,7 @@ spec:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: gitops
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true

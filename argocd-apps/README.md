@@ -19,17 +19,26 @@
   - No CI mutates the cluster.
   - Everything is auditable.
 
+## Separate control-plane GitOps from workload GitOps
+| Layer           | Namespace | AppProject | Purpose                      |
+| --------------- | --------- | ---------- | ---------------------------- |
+| Argo CD control | `argocd`  | `platform` | Manages *Application CRs*    |
+| App-of-Apps     | `argocd`  | `platform` | Bootstraps everything        |
+| Workloads       | `gitops`  | `gitops`   | Deploys apps (Grafana, etc.) |
+
+  - This eliminates Partial Sync, namespace violations, and retry storms.
+
 ### Tree Structured Layout
     argocd-apps/
     ├── README.md
     ├── apps
+    │   ├── cert-manager
+    │   │   ├── application.yaml
+    │   │   └── values.yaml
     │   ├── gitlab
     │   │   ├── application.yaml
     │   │   └── values.yaml
     │   ├── grafana
-    │   │   ├── application.yaml
-    │   │   └── values.yaml
-    │   ├── openssl
     │   │   ├── application.yaml
     │   │   └── values.yaml
     │   ├── postgres
@@ -44,8 +53,10 @@
     │   └── terraform
     │       ├── application.yaml
     │       └── values.yaml
+    ├── platform-project.yaml
     ├── projects
-    │   └── gitops.yaml
+    │   ├── README.md
+    │   └── gitops-project.yaml
     └── root-app.yaml
 
 ### Child Applications populate ArgoCD
