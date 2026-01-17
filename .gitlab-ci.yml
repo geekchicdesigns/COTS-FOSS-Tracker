@@ -12,21 +12,22 @@ scan_versions:
   tags: [docker]
   script:
     - apk add --no-cache curl jq bash
+    - mkdir -p tracker/output
 
     # Fetch all ArgoCD applications (source of truth)
     - |
       curl -sk \
         -H "Authorization: Bearer $ARGOCD_TOKEN" \
         "$ARGOCD_SERVER/api/v1/applications" \
-        > argocd-applications.json
+        > tracker/output/argocd_apps.json
 
     # Optional sanity check (non-fatal)
-    - jq '.' argocd-applications.json
+    - jq '.' tracker/output/argocd_apps.json
 
   artifacts:
     when: always
     paths:
-      - argocd-applications.json
+      - tracker/output/argocd_apps.json
     expire_in: 1 hour
 
 publish_child_report:
@@ -38,11 +39,11 @@ publish_child_report:
   dependencies:
     - scan_versions
   script:
-    - apk add --no-cache git bash curl jq
+    - apk add --no-cache git bash curl jq python3
 
     - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab/platform/cots-foss-tracker.git
     - cd cots-foss-tracker
 
-    # argocd-applications.json is already present via artifacts
-    - bash ./tracker/create_child_report.sh argocd-applications.json
-
+    # tracker/output/argocd_apps.json is already present via artifacts
+    - python3 ./tracker/compare_versions.sh
+    - bash ./tracker/create_child_report.sh tracker/output/versions.json

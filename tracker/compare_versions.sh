@@ -3,6 +3,8 @@ import json
 with open("tracker/output/argocd_apps.json") as f:
     apps = json.load(f)
 
+apps = data.get("items", [])
+
 results = []
 for app in apps:
     results.append({

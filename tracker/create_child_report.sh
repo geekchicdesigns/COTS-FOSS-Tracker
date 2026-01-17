@@ -4,7 +4,7 @@ set -euo pipefail
 # ----------------------------
 # Inputs / Outputs
 # ----------------------------
-ARGOCD_JSON="${1:-argocd-applications.json}"
+ARGOCD_JSON="${1:-argocd_apps.json}"
 OUTPUT_DIR="tracker/output"
 OUTPUT_JSON="${OUTPUT_DIR}/app_versions.json"
 OUTPUT_MD="${OUTPUT_DIR}/app_versions.md"

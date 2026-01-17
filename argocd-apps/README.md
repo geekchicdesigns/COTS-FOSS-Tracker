@@ -1,5 +1,11 @@
 ## ARGOCD APP-OF-APPS
 
+## Architectural Direction
+  - ArgoCD as source of deployment truth
+  - GitLab CI as read-only observer
+  - Confluence as reporting / compliance surface
+  - Grafana as visualization platform
+
 ## GitOp Flow
 | Action                 | Owner       |
 | ---------------------- | ----------- |
@@ -104,7 +110,7 @@ argocd repo add \
 
 ### Create the ArgoCD Application (this is the "wire")
 Create this file within repo:
-`argocd/apps/cots-foss-tracker.yaml'
+`argocd/apps/cots-foss-tracker.yaml`
 
 ### Apply the Application ONCE
 From within Kubernetes environment:
