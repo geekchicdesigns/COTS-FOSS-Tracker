@@ -73,7 +73,7 @@ Apply the root app once:
 | Thing                             | Purpose                    |
 | --------------------------------- | -------------------------- |
 | GitLab repo credentials in ArgoCD | Let ArgoCD read Git        |
-| ArgoCD Application manifest     | Tell ArgoCD ^Iwhat^I to sync |
+| ArgoCD Application manifest     | Tell ArgoCD _what_ to sync |
 
 ### Create GitLab Deploy Token
 `Project -> Settings -> Repository -> Deploy Tokens
@@ -91,11 +91,13 @@ Save:
 
 ### Register GitLab repo in ArgoCD
 Run this once, from anywhere that can reach ArgoCD:
-`argocd repo add \
+```
+argocd repo add \
   http://gitlab.local/platform/cots-foss-tracker.git \
   --username <DEPLOY_TOKEN_USERNAME> \
   --password <DEPLOY_TOKEN> \
-  --insecure-skip-server-verification'
+  --insecure-skip-server-verification
+```
 
 - This stores credentials inside ArgoCD
 - GitLab does not need to know ArgoCD exists
