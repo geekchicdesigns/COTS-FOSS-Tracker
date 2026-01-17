@@ -178,7 +178,7 @@ gitlab/logs/
 *.key
 *.pem
 
-tracker/output/
+tracker/output/*
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
