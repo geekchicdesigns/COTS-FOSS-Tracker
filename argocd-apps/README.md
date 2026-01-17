@@ -66,3 +66,50 @@ Apply the root app once:
     - Root app: Synced
     - Child apps: Synced / Healthy
 
+## Wiring GitLab -> ArgoCD
+  - This ONE-WAY relationship allows ArgoCD to pull from GitLab.
+  - GitLab never talks directly to ArgoCD in normal operations.
+
+| Thing                             | Purpose                    |
+| --------------------------------- | -------------------------- |
+| GitLab repo credentials in ArgoCD | Let ArgoCD read Git        |
+| ArgoCD Application manifest     | Tell ArgoCD ^Iwhat^I to sync |
+
+### Create GitLab Deploy Token
+`Project -> Settings -> Repository -> Deploy Tokens
+
+| Field    | Value             |
+| -------- | ----------------- |
+| Name     | `argocd-readonly` |
+| Username | auto              |
+| Scopes   | read_repository   |
+| Expiry   | optional          |
+
+Save:
+  - Username
+  - Token
+
+### Register GitLab repo in ArgoCD
+Run this once, from anywhere that can reach ArgoCD:
+`argocd repo add \
+  http://gitlab.local/platform/cots-foss-tracker.git \
+  --username <DEPLOY_TOKEN_USERNAME> \
+  --password <DEPLOY_TOKEN> \
+  --insecure-skip-server-verification'
+
+- This stores credentials inside ArgoCD
+- GitLab does not need to know ArgoCD exists
+
+### Create the ArgoCD Application (this is the "wire")
+Create this file within repo:
+`argocd/apps/cots-foss-tracker.yaml'
+
+### Apply the Application ONCE
+From within Kubernetes environment:
+`kubectl apply -f argocd/apps/cots-foss-tracker.yaml`
+
+### Confirm ArgoCD wiring - local testing specific to WSL2 | KIND | Docker Compose architecture
+`argocd app list`
+`argocd app get cots-foss-tracker`
+
+
