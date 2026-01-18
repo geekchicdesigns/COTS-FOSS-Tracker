@@ -1,6 +1,8 @@
 # COTS-FOSS-Tracker
 Tracking Infrastructure COTS/FOSS Versioning
 
+THIS IS A LIVE REPOSITORY! UPDATES ARE IN-PROGRESS, AND README.MD FILES ARE THROUGHOUT!
+
 ## COTS/FOSS Tracker - Local Automation
 What the tracker does (locally)
 1. Pull live versions from:
